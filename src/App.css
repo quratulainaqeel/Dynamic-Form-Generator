@@ -1,0 +1,82 @@
+/* Styling the overall form container */
+.form-container {
+  max-width: 850px;
+  margin: 50px auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.button-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.button-row button {
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.button-row button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Form title row */
+.form-title {
+  margin-bottom: 20px;
+}
+
+.form-title input {
+  padding: 5px;
+  width: 300px;
+  margin-left: 10px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 5px 10px;
+  /* background-color: #f53636; */
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* button:hover {
+  background-color: #f51414;
+} */
+
+.heading {
+  text-align: center;
+  /* color: #f51414; */
+}
