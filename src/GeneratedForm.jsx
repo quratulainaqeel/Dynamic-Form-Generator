@@ -5,11 +5,14 @@ function GeneratedForm() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (!location.state || !location.state.formData) {
-    navigate('/');
-    return null;
-  }
+  // Check for valid state and navigate if not present
+  useEffect(() => {
+    if (!location.state || !location.state.formData) {
+      navigate('/');
+    }
+  }, [location.state, navigate]); // Add dependencies
 
+  // Extract form data from the location state
   const { formTitle, fields } = location.state.formData;
   const [formValues, setFormValues] = useState({});
   const [submissions, setSubmissions] = useState([]);
@@ -61,15 +64,6 @@ function GeneratedForm() {
                   style={{ width: '70%' }}
                 />
               )}
-              {/* {field.type === 'True/False' && (
-                <input
-                  type="checkbox"
-                  className="form-check-input border border-secondary"
-                  checked={formValues[field.name] || false}
-                  onChange={(e) => handleChange(field.name, e.target.checked)}
-                  style={{ marginLeft: '15px' }}
-                />
-              )} */}
               {field.type === 'Dropdown' && (
                 <select
                   className="form-control border border-secondary"
@@ -98,7 +92,7 @@ function GeneratedForm() {
               )}
             </div>
           ))}
-          <button type="submit" className='btn btn-outline-primary mt-3 ' style={{ width: '40%', fontSize: '16px', padding: '8px' }}>Save</button>
+          <button type="submit" className='btn btn-outline-primary mt-3' style={{ width: '40%', fontSize: '16px', padding: '8px' }}>Save</button>
         </form>
       </div>
 
@@ -114,11 +108,11 @@ function GeneratedForm() {
                 ))}
               </tr>
             </thead>
-            <tbody >
+            <tbody>
               {submissions.slice(-10).map((submission, idx) => (
                 <tr key={idx}>
                   {fields.map((field, index) => (
-                    <td key={index } >
+                    <td key={index}>
                       {typeof submission[field.name] === 'boolean'
                         ? submission[field.name] ? 'True' : 'False'
                         : submission[field.name] || 'N/A'}

@@ -1,40 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
+import ExixtingForm from './ExixtingForm';
 
 function App() {
   const [fields, setFields] = useState([]);
   const [formTitle, setFormTitle] = useState('');
-  const [fileFormat, setFileFormat] = useState('JSON'); // New state for file format
+  const [fileFormat, setFileFormat] = useState('JSON');
   const navigate = useNavigate();
 
   const handleAddRow = () => {
     setFields([...fields, { name: '', type: 'String', mandatory: false, options: '' }]);
-  };
-
-  const handleGenerateForm = () => {
-    if (!formTitle.trim()) {
-      alert('Please enter a Form Title before generating the form.');
-      return;
-    }
-
-    const savedForms = JSON.parse(localStorage.getItem('savedForms')) || [];
-    const existingForm = savedForms.find((form) => form.formTitle === formTitle);
-
-    if (existingForm) {
-      alert(`Form with the title "${formTitle}" already exists! Please choose a different title.`);
-      return;
-    }
-
-    const formData = { formTitle, fields };
-    savedForms.push(formData);
-    localStorage.setItem('savedForms', JSON.stringify(savedForms));
-
-    navigate('/generated-form', { state: { formData } });
+    console.log(fields)
   };
 
   const handleSaveFile = () => {
-    const formData = { formTitle, fields };
+    const formData = {
+      formTitle,
+      fields
+    };
+
     let fileContent;
     let fileExtension;
 
@@ -53,7 +38,7 @@ function App() {
                 <mandatory>${field.mandatory}</mandatory>
                 <options>${field.options}</options>
               </field>
-            `).join('')}
+            `).join('')} 
           </fields>
         </form>
       `;
@@ -64,7 +49,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `formData.${fileExtension}`;
+    a.download = `${formTitle}.${fileExtension}`;
     a.click();
   };
 
@@ -75,10 +60,11 @@ function App() {
         const jsonData = JSON.parse(e.target.result);
         setFormTitle(jsonData.formTitle);
         setFields(jsonData.fields);
-      } else if (fileFormat === 'XML') {
+      }
+      else if (fileFormat === 'XML') {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(e.target.result, "text/xml");
-        const title = xmlDoc.getElementsByTagName("formTitle")[0].textContent;
+        const title = xmlDoc.getElementsByTagName("formTitle")[0].textContent; // extracts the formTitle element from the XML and retrieves its text content.
         const fields = Array.from(xmlDoc.getElementsByTagName("field")).map(field => ({
           name: field.getElementsByTagName("name")[0].textContent,
           type: field.getElementsByTagName("type")[0].textContent,
@@ -93,8 +79,32 @@ function App() {
     fileReader.readAsText(event.target.files[0]);
   };
 
+  const handleGenerateForm = () => {
+    if (!formTitle.trim()) {
+      alert('Please enter a Form Title before generating the form.');
+      return;
+    }
+
+    const savedForms = JSON.parse(localStorage.getItem('savedForms')) || [];
+    const existingForm = savedForms.find((form) => form.formTitle === formTitle);
+
+    if (existingForm) {
+      alert(`Form with the title "${formTitle}" already exists! Please choose a different title.`);
+      return;
+    }
+
+    const formData = {
+      formTitle,
+      fields
+    };
+    savedForms.push(formData);
+    localStorage.setItem('savedForms', JSON.stringify(savedForms));
+
+    navigate('/generated-form', { state: { formData } });
+  };
+
   const handleFieldChange = (index, field, value) => {
-    const updatedFields = fields.map((f, i) => (i === index ? { ...f, [field]: value } : f));
+    const updatedFields = fields.map((val, key) => (key === index ? { ...val, [field]: value } : val));
     setFields(updatedFields);
   };
 
@@ -102,33 +112,17 @@ function App() {
     setFields(fields.filter((_, i) => i !== index));
   };
 
-  const [savedForms, setSavedForms] = useState([]);
-  const [selectedForm, setSelectedForm] = useState('');
 
-  useEffect(() => {
-    const forms = JSON.parse(localStorage.getItem('savedForms')) || [];
-    setSavedForms(forms);
-  }, []);
-
-  const handleFormSelect = (e) => {
-    setSelectedForm(e.target.value);
-  };
-
-  const handleExistingFormLoad = () => {
-    const formData = savedForms.find((form) => form.formTitle === selectedForm);
-
-    if (formData) {
-      navigate('/generated-form', { state: { formData } });
-    }
-  };
 
   return (
     <>
       <div className="form-container">
         <h1>Create a form with Fields</h1>
         <div className="button-row">
+
           <button onClick={handleAddRow}>Add row</button>
-          <button onClick={handleSaveFile}>Save as {fileFormat}</button>
+          <button onClick={handleSaveFile}>Save {fileFormat}</button>
+
           <button>
             <label htmlFor="fileInput" className="jsonFileLabel">
               Load {fileFormat}
@@ -141,21 +135,23 @@ function App() {
             accept={fileFormat === 'JSON' ? '.json' : '.xml'}
             onChange={handleLoadFile}
           />
-          <button onClick={handleGenerateForm}>Save Form</button>
+
+          <button onClick={handleGenerateForm}>Generate Form</button>
         </div>
-        <div className="form-title">
+
+        <div className="form-title d-flex align-items-center justify-content-center mt-4">
           <label>Form Title</label>
           <input
             type="text"
             placeholder="Enter form title"
             value={formTitle}
             onChange={(e) => setFormTitle(e.target.value)}
+            style={{ width: '90%' }}
           />
         </div>
 
-        {/* New Section for File Format Selection */}
-        <div className="file-format-selection">
-          <label  className='mx-2'>
+        <div >
+          <label className='mx-2'>
             <input
               type="radio"
               value="JSON"
@@ -175,7 +171,7 @@ function App() {
           </label>
         </div>
 
-        <table>
+        <table className='table table-bordered table-striped my-4'>
           <thead>
             <tr>
               <th>Name</th>
@@ -225,43 +221,14 @@ function App() {
                   )}
                 </td>
                 <td>
-                  <button onClick={() => handleDeleteRow(index)}>Delete</button>
+                  <button onClick={() => handleDeleteRow(index)} className='btn btn-danger'>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Section to load an existing form */}
-      <div className="container my-5">
-        <h1 className="text-center mb-4">Load an Existing Form</h1>
-        <div className="d-flex align-items-center justify-content-center">
-          <label htmlFor="existing-form" className="me-3 fw-semibold">Select Existing Form</label>
-          <select
-            id="existing-form"
-            name="existingForm"
-            className="form-select me-3 border border-secondary"
-            style={{ width: '200px' }}
-            value={selectedForm}
-            onChange={handleFormSelect}
-          >
-            <option value="" disabled>Select a form</option>
-            {savedForms.map((form, index) => (
-              <option key={index} value={form.formTitle}>
-                {form.formTitle}
-              </option>
-            ))}
-          </select>
-          <button
-            className="btn btn-secondary"
-            onClick={handleExistingFormLoad}
-            disabled={!selectedForm}
-          >
-            Generate Form
-          </button>
-        </div>
-      </div>
+      <ExixtingForm />
     </>
   );
 }
