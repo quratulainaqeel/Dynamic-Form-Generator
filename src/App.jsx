@@ -11,7 +11,6 @@ function App() {
 
   const handleAddRow = () => {
     setFields([...fields, { name: '', type: 'String', mandatory: false, options: '' }]);
-    console.log(fields)
   };
 
   const handleSaveFile = () => {
@@ -85,7 +84,7 @@ function App() {
       return;
     }
 
-    const savedForms = JSON.parse(localStorage.getItem('savedForms')) || [];
+    const savedForms = JSON.parse(localStorage.getItem('Forms')) || [];
     const existingForm = savedForms.find((form) => form.formTitle === formTitle);
 
     if (existingForm) {
@@ -98,7 +97,7 @@ function App() {
       fields
     };
     savedForms.push(formData);
-    localStorage.setItem('savedForms', JSON.stringify(savedForms));
+    localStorage.setItem('Forms', JSON.stringify(savedForms));
 
     navigate('/generated-form', { state: { formData } });
   };
@@ -111,8 +110,6 @@ function App() {
   const handleDeleteRow = (index) => {
     setFields(fields.filter((_, i) => i !== index));
   };
-
-
 
   return (
     <>
@@ -228,7 +225,9 @@ function App() {
           </tbody>
         </table>
       </div>
+
       <ExixtingForm />
+      
     </>
   );
 }

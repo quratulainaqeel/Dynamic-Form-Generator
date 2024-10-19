@@ -10,10 +10,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <Routes>
-        {/* Default route (form builder screen) */}
         <Route path="/" element={<App />} />
-        
-        {/* Route for the dynamically generated form */}
         <Route path="/generated-form" element={<GeneratedForm />} />
       </Routes>
     </Router>

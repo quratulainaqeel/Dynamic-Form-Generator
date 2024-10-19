@@ -37,7 +37,7 @@ function GeneratedForm() {
   };
 
   return (
-    <div className="generated-form-container">
+    <div>
       <div className="d-flex justify-content-center align-items-center vh-100">
         <form onSubmit={handleSubmit} className="d-flex flex-column align-items-center justify-content-center" style={{ maxWidth: '500px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
           <h2 className="mb-4">{formTitle}</h2>
@@ -47,7 +47,7 @@ function GeneratedForm() {
               {field.type === 'String' && (
                 <input
                   type="text"
-                  className="form-control border border-secondary"
+                  className=" border border-secondary"
                   value={formValues[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
                   required={field.mandatory}
@@ -113,9 +113,7 @@ function GeneratedForm() {
                 <tr key={idx}>
                   {fields.map((field, index) => (
                     <td key={index}>
-                      {typeof submission[field.name] === 'boolean'
-                        ? submission[field.name] ? 'True' : 'False'
-                        : submission[field.name] || 'N/A'}
+                      {submission[field.name] || 'N/A'}
                     </td>
                   ))}
                 </tr>

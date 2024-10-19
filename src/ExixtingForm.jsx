@@ -9,7 +9,7 @@ const ExixtingForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const forms = JSON.parse(localStorage.getItem('savedForms')) || [];
+        const forms = JSON.parse(localStorage.getItem('Forms')) || [];
         setSavedForms(forms);
     }, []);
 
@@ -26,6 +26,7 @@ const ExixtingForm = () => {
                 <h1 className="text-center mb-4">Load an Existing Form</h1>
                 <div className="d-flex align-items-center justify-content-center">
                     <label htmlFor="existing-form" className="me-3 fw-semibold">Select Existing Form</label>
+                    
                     <select
                         id="existing-form"
                         name="existingForm"
@@ -49,6 +50,7 @@ const ExixtingForm = () => {
                     >
                         Generate Form
                     </button>
+                    
                 </div>
             </div>
         </>
